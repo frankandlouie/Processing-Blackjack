@@ -1,0 +1,73 @@
+private ArrayList<Integer> playerHand = new ArrayList<Integer>();
+  private int handTotal = 0;
+  
+  public void addCardToPlayerHand(int cardRank)
+  {
+    playerHand.add(cardRank);
+  }
+  
+  public int playerHandTotal()
+  {
+    for(int i : playerHand)
+    {
+      handTotal += i;
+    }
+    return handTotal;
+  }
+
+
+---------------------------------------------------------
+Cards Class:
+- rank
+- suit 
+- displayImage
+
+Player Class:
+- hand total
+- total chips
+- bet amount for round
+- hit
+- stand
+- double
+- split
+
+blackjack:
+
+-1) player puts in bet
+0) first card gets burned
+1) deal player face up
+2) deal dealer face up
+3) deal player face up
+4) deal dealer face down 
+	4a) if dealer face up is ace, ask for insurance	
+		4a1) if player takes insurance, take half of their bet
+	4b) dealer check for blackjack
+		4b1) if dealer has, everyone looses 
+		4b2) if not then game continues
+5) player choice: hit, stand, double, split
+	5a) double:
+		5a1) player bet increases by 100%
+		5a2) player only gets delt one more card perpendicular to other cards 
+		5a3) rank of that card gets added on to player hand total 
+		5a4) that's it 
+	5b) stand:
+		5b1) that's it 
+	5c) hit:
+		5c1) player gets dealt another card
+		5c2) card rank gets added to the player hand total 
+			5c2i) if hand total is over 21, they lose their bet 
+				5c2i1) round ends definitevely
+			5c2ii) player chooses to stand 
+		5c3) repeat step 5c1 until the player busts or stands 
+	5d) split (only if the 2 ranks are identical)
+		5d1) player bet increases by 100%
+		5d2) each half of the new bet becomes singular bets for 2 seperate hands
+		5d3) deal player a card for one hand 
+		5d4) go back to step 5
+6) player turn over
+	6a) if dealer has less than 17
+		6a1) dealer keeps going until they have 17+ 
+	6b) if dealer has 17 (even soft 17)
+		6b1) thats it 
+	6c) compare dealer hand total to player and yeah straightfoward from there out 
+		
