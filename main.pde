@@ -2,7 +2,6 @@ void setup()
 {
   background(128, 192, 255);
   size(1280, 720);
-
 }
 
 BlackJack game = new BlackJack();
@@ -56,10 +55,10 @@ void draw()
     calculateStandings = true;
   }
 
-  if(game.dealer.dealerHasAce())
-  {
-    game.insurance();
-  }
+  //if(game.dealer.dealerHasAce())
+  //{
+  //  game.insurance();
+  //}
   
   game.displayHitButton();
   game.displayStandButton();
@@ -139,6 +138,7 @@ void draw()
       bothLose = true;
     }
     
+    calculateStandings = false;
     displayStandings = true;
   }
   
@@ -161,142 +161,34 @@ void draw()
       text("You Lost! Dealer Wins!", 640, height / 2);
     }
     
+    displayStandings = false;
     askNextRound = true;
   }
+  
+  //private boolean firstCardBurned = false;
+  //private boolean initialCardsDealt = false;
+  //private boolean playersTurn = false;
+  //private boolean dealersTurn = false;
+  //private boolean calculateStandings = false;
+  //private boolean displayStandings = false;
+  //private boolean askNextRound = false;
   
   if(askNextRound)
   {
     game.displayNextHandButton();
     game.displayEndGameButton();
+    if(game.detectNextHandButtonClicked())
+    {
+      //Reset player and dealer card positions
+      //Reset player and dealer hand total 
+      //Set all initialCardsDealt phase to false
+      initialCardsDealt = false;
+      askNextRound = false;
+      background(128, 192, 255);
+    }
+    if(game.detectEndGameButtonClicked())
+    {
+      
+    }
   }
-  
-  
-  
-  
-   
 }
-
-
-//  private boolean firstCardBurned = false;
-//  private boolean firstWaveOfCardsDealt = false;
-//  private boolean playersTurn = false;
-//  private boolean dealersTurn = false;
-//  private boolean displayFinalStandings = false;
-//  private boolean playerBlackJack = false;
-//  private boolean playerLoss = false;
-//  private boolean dealerLoss = false;
-//  private boolean push = false;
-  
-//void draw()
-//{
-//  //game.dealPlayerCardsAndSetPlayerRank();
-//  //game.dealDealerCardsAndSetDealerRank();
-//  //game.dealPlayerCardsAndSetPlayerRank();
-    
-//  if(!firstCardBurned)
-//  {
-//    game.burnFirstCard();
-//  }
-    
-//  if (!firstWaveOfCardsDealt) 
-//  {
-//    game.dealAndSetPlayerCard();
-//    game.dealAndSetDealerCard(0);
-//    game.dealAndSetPlayerCard();
-//    game.dealAndSetDealerCard(1);
-//    textSize(100);
-//    //text(game.dealer.getTotal(), 900, 200);
-//    firstWaveOfCardsDealt = true;
-//    playersTurn = true;
-//  }
-    
-//  game.displayHitButton();
-//  game.displayStandButton();
-    
-//  if (game.p1.blackjack())
-//  {
-//    playerBlackJack = true;
-//    if(game.dealer.getTotal() == 21)
-//    {
-//      playerBlackJack = false;
-//      push = true;
-//    }
-//    playersTurn = false;
-//    dealersTurn = true;
-//  }
-    
-//  if (playersTurn)
-//  {
-//    if (game.detectHitButtonClicked()) 
-//    {
-//      game.dealAndSetPlayerCard();
-//    }
-//    game.p1.aceValueSetter();
-//    if (game.detectBust('p'))
-//    {
-//      playersTurn = false;
-//      dealersTurn = true;
-//      playerLoss = true;
-//    }
-//    if (game.detectStandButtonClicked())
-//    {
-//      playersTurn = false;
-//      dealersTurn = true;
-//    }
-//  }
-    
-//  if (dealersTurn)
-//  {
-//    game.revealDealerCard();
-//    game.dealersTurn();
-//    if (game.detectBust('d')) 
-//    { 
-//      // text("You Lost!", 640, height / 2);
-//      dealerLoss = true;
-//    }
-//      dealersTurn = false;
-//      displayFinalStandings = true;
-//  }
-    
-//  if (game.dealer.getTotal() < game.p1.getTotal())
-//  {
-//    dealerLoss = true;
-//  }
-    
-//  if (displayFinalStandings)
-//  {
-//    if (playerLoss)
-//    {
-//      // text(game.dealer.getTotal(), 900, 200);
-//      text("You Lost!", 640, height / 2);
-//    }
-//    if (dealerLoss)
-//    {
-//      text("You Won!", 640, height / 2);
-//    }
-//    if (playerBlackJack)
-//    {
-//      text("Blackjack! You won!", 640, height / 2);
-//    }
-//    if(push)
-//    {
-//      text("Push!", 640, height / 2);
-//    }
-
-//        // game.dealerLosesToBust();
-//        // game.playerWins();
-//  }
-    
-    
-    
-    
-    
-    
-//    //work on next hand
-    
-//    //work on game reset(just create autocfg basically)
-    
-//    //work on playing multiple hands(timer between each hand)
-    
-//    //work on multiple players. 
-//}
