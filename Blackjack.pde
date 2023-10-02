@@ -6,17 +6,28 @@ class BlackJack
   private int playerCardCount = 0;
   private int dealerCardCount = 0;
   
+  private int buttonSize = 100;
   private color hitButtonCol = color (255, 0, 0);
   private color standButtonCol = color(255, 0 ,0);
   private color nextHandButtonCol = color (255, 0, 0);
   private color endGameButtonCol = color(255, 0 ,0);
+ 
+  // Parallel Arrays: [0]=Stand, [1]=Hit, [2]=NextHand, [3]=EndGame
+  private int [] buttonXCoords     = {850, 1000, 1000, 1150};
+  private int [] buttonYCoords     = {600, 600,  100,  100 };
+  private int [] buttonTextXCoords = {860, 1025, 1015, 1165};
+  private int [] buttonTextYCoords = {660, 660,  140,   140};
   
   private int dealerCardIndex;
   
-  //private int cardXpos = 530;
-  int playerCardsXpos = 530;
+  private int playerStartingCardsXpos = 530;
+  private int playerStartingCardsYpos = 400;
+  private int dealerStartingCardsXpos = 530;
+  private int dealerStartingCardsYpos = 100;
+  
+  private int playerCardsXpos = 530;
   private int playerCardsYpos = 400;
-  int dealerCardsXpos = 530; // width/2 - cardWidth - 10
+  private int dealerCardsXpos = 530;
   private int dealerCardsYpos = 100;
   
   Player p1 = new Player();
@@ -127,127 +138,57 @@ class BlackJack
       dealer.aceValueSetter();
     }
   }
-
-
-  //public void dealAndSetPlayerCard()
-  //{
-  //  sixDecks.decks[cardCount].displayCard(playerCardsXpos, 450, sixDecks.decks[cardCount].getFrontSide());
-  //  p1.setCardValue(sixDecks.decks[cardCount].getRank(), playerCardCount);
-  //  cardCount++;
-  //  playerCardCount++;
-  //  playerCardsXpos += 110;
-  //}
-  
-  ////public void setPlayerCard()
-  ////{
-    
-  ////}
-  
-  ////public void updatePlayersCardsPosition()
-  ////{
-    
-  ////}
-  
-  //public void dealAndSetDealerCard(int i)
-  //{
-  //  if(i == 0)
-  //  {
-  //    dealer.setHiddenCard(sixDecks.decks[cardCount].getFrontSide());
-  //    sixDecks.decks[cardCount].displayCard(dealerCardsXpos, 100, sixDecks.decks[cardCount].getBackSide());
-  //  }
-  //  else
-  //    sixDecks.decks[cardCount].displayCard(dealerCardsXpos, 100, sixDecks.decks[cardCount].getFrontSide());
-  //  dealer.setCardValue(sixDecks.decks[cardCount].getRank(), dealerCardCount);
-  //  cardCount++;
-  //  dealerCardCount++;
-  //  dealerCardsXpos += 110;
-  //}
-  
-  //public void revealDealerCard()
-  //{
-  //  image(loadImage(dealer.getHiddenCard()), 530, 100, 100, 150);
-  //}
-  
-  //// public boolean dealerLosesToBust()
-  //// {
-  ////   boolean dealerBusted = false;
-  ////   if(dealer.checkDealerBust())
-  ////   {
-  ////     dealerBusted = true;
-  ////     text(game.dealer.getTotal(), 900, 200);
-  ////     text("Dealer busted", 640, height/2);
-  ////   }
-  ////   return dealerBusted;
-  //// }
-  
-  //public void playerWins()
-  //{
-  //  if(p1.getTotal() > dealer.getTotal())
-  //  {
-  //    text(game.dealer.getTotal(), 900, 200);
-  //    text("You Won!", 640, height/2);
-  //  }
-  //}
-  
-  //public void playerLoses()
-  //{
-  //  if(dealer.getTotal() > p1.getTotal());
-  //  {
-  //    text(game.dealer.getTotal(), 900, 200);
-  //    text("You Lost! Poopoo", 640, height/2);
-  //  }
-  //}
   
   public void displayHitButton()
   {
     fill(hitButtonCol);
-    square(1000.0, 600.0, 100);
+    square(buttonXCoords[1], buttonYCoords[1], buttonSize);
     fill(0, 0, 0);
     textSize(30);
-    text("Hit", 1025, 660);
+    text("Hit", buttonTextXCoords[1], buttonTextYCoords[1]);
   }
   
   public void displayStandButton()
   {
     fill(standButtonCol);
-    square(800.0, 600.0, 100);
+    square(buttonXCoords[0], buttonYCoords[0], buttonSize);
     fill(0, 0, 0);
     textSize(30);
-    text("Stand", 810, 660);
+    text("Stand", buttonTextXCoords[0], buttonTextYCoords[0]);
   }
   
   public void displayNextHandButton()
   {
     fill(nextHandButtonCol);
-    square(1000.0, 100.0, 100);
+    square(buttonXCoords[2], buttonYCoords[2], buttonSize);
     fill(0, 0, 0);
     textSize(30);
-    text("Next\nHand", 1015, 150);
+    text("Next\nHand", buttonTextXCoords[2], buttonTextYCoords[2]);
   }
   
   public void displayEndGameButton()
   {
     fill(endGameButtonCol);
-    square(1130.0, 100.0, 100);
+    square(buttonXCoords[3], buttonYCoords[3], buttonSize);
     fill(0, 0, 0);
     textSize(30);
-    text("End\nGame", 1145, 150);
+    text("End\nGame", buttonTextXCoords[3], buttonTextYCoords[3]);
   }
   
-  public void setHitButCol(int x, int y, int z)
+  public void setHitButCol(int r, int g, int b)
   {
-    hitButtonCol = color(x, y, z);
+    hitButtonCol = color(r, g, b);
   }
   
-  public void setStandButCol(int x, int y, int z)
+  public void setStandButCol(int r, int g, int b)
   {
-    standButtonCol = color(x, y, z);
+    standButtonCol = color(r, g, b);
   }
   
   public boolean detectHitButtonClicked()
   {
     boolean clicked = false;
-    if((mouseX >= 1000 && mouseX <= 1100 && mouseY >= 600 && mouseY <= 700 && mousePressed) || (keyPressed && key == 'h'))
+    if((mouseX >= buttonXCoords[1] && mouseX <= buttonXCoords[1] + buttonSize && mouseY >= buttonYCoords[1] && mouseY <= buttonYCoords[1] + buttonSize && mousePressed) || (keyPressed && key == 'h'))
     {
       clicked = true;
     }    
@@ -257,9 +198,31 @@ class BlackJack
   public boolean detectStandButtonClicked()
   {
     boolean clicked = false; 
-    if((mouseX >= 800 && mouseX <= 900 && mouseY >= 600 && mouseY <= 700 && mousePressed) || (keyPressed && key == 's'))
+    if((mouseX >= buttonXCoords[0] && mouseX <= buttonXCoords[0] + buttonSize && mouseY >= buttonYCoords[0] && mouseY <= buttonYCoords[0] + buttonSize && mousePressed) || (keyPressed && key == 's'))
     {
       greyOutButtons();
+      clicked = true;
+    }
+    
+    return clicked;
+  }
+  
+  public boolean detectNextHandButtonClicked()
+  {
+    boolean clicked = false; 
+    if((mouseX >= buttonXCoords[2] && mouseX <= buttonXCoords[2] + buttonSize && mouseY >= buttonYCoords[2] && mouseY <= buttonYCoords[2] + buttonSize && mousePressed) || (keyPressed && key == 'n'))
+    {
+      clicked = true;
+    }
+    
+    return clicked;
+  }
+  
+  public boolean detectEndGameButtonClicked()
+  {
+    boolean clicked = false; 
+    if((mouseX >= buttonXCoords[3] && mouseX <= buttonXCoords[3] + buttonSize && mouseY >= buttonYCoords[3] && mouseY <= buttonYCoords[3] + buttonSize && mousePressed) || (keyPressed && key == 'q'))
+    {
       clicked = true;
     }
     
@@ -271,48 +234,4 @@ class BlackJack
     setHitButCol(128, 128, 128);
     setStandButCol(128, 128, 128);
   }
-  
-  //public void dealersTurn()
-  //{    
-  //  while(dealer.getTotal() < 17)
-  //  {
-  //    dealAndSetDealerCard(1);
-  //    dealer.aceValueSetter();
-  //  }
-  //}
-  
-  //public boolean detectBust(char t)
-  //{
-  //  boolean busted = false;
-  //  if(t == 'p')
-  //  {
-  //    if (p1.getTotal() > 21)
-  //    {
-  //      busted = true;
-  //    }
-  //    else if(t == 'd')
-  //    {
-  //      if (dealer.getTotal() > 21)
-  //      {
-  //        busted = true;
-  //      }
-  //    }
-  //    // fill(255, 255, 255);
-  //    // textSize(100);
-  //    // text("You lost", width/2, height/2);
-  //  }
-  //  return busted;
-  //}
-  
-  //public boolean blackjack()
-  //{
-  //  boolean blackjack = false;
-  //  if(p1.getTotal() == 21)// && p1.getCardRanksSize() == 2)
-  //  {
-  //    blackjack = true;
-  //  }
-  //  return blackjack;
-  //}
-  
-  
 }
