@@ -225,7 +225,6 @@ class BlackJack
     {
       clicked = true;
     }
-    
     return clicked;
   }
   
