@@ -93,6 +93,11 @@ class Player
    {
      return playerHand.size();
    }
+   
+   public void resetHandTotal()
+   {
+     playerHand.clear();
+   }
 }
 
 class Dealer extends Player
