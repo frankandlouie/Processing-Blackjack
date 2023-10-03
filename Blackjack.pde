@@ -7,16 +7,16 @@ class BlackJack
   private int dealerCardCount = 0;
   
   private int buttonSize = 100;
-  private color hitButtonCol = color (255, 0, 0);
-  private color standButtonCol = color(255, 0 ,0);
-  private color nextHandButtonCol = color (255, 0, 0);
-  private color endGameButtonCol = color(255, 0 ,0);
+  private color hitButtonColor = color (255, 0, 0);
+  private color standButtonColor = color(255, 0 ,0);
+  private color nextHandButtonColor = color (255, 0, 0);
+  private color endGameButtonColor = color(255, 0 ,0);
  
   // Parallel Arrays: [0]=Stand, [1]=Hit, [2]=NextHand, [3]=EndGame
   private int [] buttonXCoords     = {850, 1000, 1000, 1150};
-  private int [] buttonYCoords     = {600, 600,  100,  100 };
-  private int [] buttonTextXCoords = {860, 1025, 1015, 1165};
-  private int [] buttonTextYCoords = {660, 660,  140,   140};
+  private int [] buttonYCoords     = {600, 600,  200,   200};
+  private int [] buttonTextXCoords = {buttonXCoords[0] + 10, buttonXCoords[1] + 25, buttonXCoords[2] + 15, buttonXCoords[3] + 25};
+  private int [] buttonTextYCoords = {buttonYCoords[0] + 60, buttonYCoords[1] + 60, buttonYCoords[2] + 40, buttonYCoords[3] + 40};
   
   private int dealerCardIndex;
   
@@ -25,10 +25,10 @@ class BlackJack
   private int dealerStartingCardsXpos = 530;
   private int dealerStartingCardsYpos = 100;
   
-  private int playerCardsXpos = 530;
-  private int playerCardsYpos = 400;
-  private int dealerCardsXpos = 530;
-  private int dealerCardsYpos = 100;
+  private int playerCardsXpos = playerStartingCardsXpos;
+  private int playerCardsYpos = playerStartingCardsYpos;
+  private int dealerCardsXpos = dealerStartingCardsXpos;
+  private int dealerCardsYpos = dealerStartingCardsYpos;
   
   Player p1 = new Player();
   Dealer dealer = new Dealer();
@@ -115,16 +115,6 @@ class BlackJack
     text("Insurance?", rectX, rectY - 10);
   }
   
-  public void resumeGame()
-  {
-    int rectX = width - (width/4);
-    int rectY = height/10;
-    int rectWidth = width/5;
-    int rectHeight = height/8;
-    textSize(50);
-    text("Next Hand?", rectX, rectY - 10);
-  }
-  
   public void revealDealerCard()
   {
     image(loadImage(dealer.getHiddenCard()), 530, 100, 100, 150);
@@ -141,7 +131,7 @@ class BlackJack
   
   public void displayHitButton()
   {
-    fill(hitButtonCol);
+    fill(hitButtonColor);
     square(buttonXCoords[1], buttonYCoords[1], buttonSize);
     fill(0, 0, 0);
     textSize(30);
@@ -150,7 +140,7 @@ class BlackJack
   
   public void displayStandButton()
   {
-    fill(standButtonCol);
+    fill(standButtonColor);
     square(buttonXCoords[0], buttonYCoords[0], buttonSize);
     fill(0, 0, 0);
     textSize(30);
@@ -159,7 +149,7 @@ class BlackJack
   
   public void displayNextHandButton()
   {
-    fill(nextHandButtonCol);
+    fill(nextHandButtonColor);
     square(buttonXCoords[2], buttonYCoords[2], buttonSize);
     fill(0, 0, 0);
     textSize(30);
@@ -168,21 +158,35 @@ class BlackJack
   
   public void displayEndGameButton()
   {
-    fill(endGameButtonCol);
+    fill(endGameButtonColor);
     square(buttonXCoords[3], buttonYCoords[3], buttonSize);
     fill(0, 0, 0);
     textSize(30);
     text("End\nGame", buttonTextXCoords[3], buttonTextYCoords[3]);
   }
   
-  public void setHitButCol(int r, int g, int b)
+  public void setHitButCol(color col)
   {
-    hitButtonCol = color(r, g, b);
+    //hitButtonCol = color(r, g, b);
+    hitButtonColor = col;
   }
   
   public void setStandButCol(int r, int g, int b)
   {
-    standButtonCol = color(r, g, b);
+    standButtonColor = color(r, g, b);
+  }
+  
+    public void greyOutHitAndStandButtons()
+  {
+    setHitButCol(color(128, 128, 128));
+    setStandButCol(128, 128, 128);
+  }
+  
+  public void fillOutHitAndStandButtons()
+  {
+    //color hitButtonColor = color(216, 128, 164);
+    setHitButCol(hitButtonColor);
+    setStandButCol(128, 128, 128);
   }
   
   public boolean detectHitButtonClicked()
@@ -200,7 +204,7 @@ class BlackJack
     boolean clicked = false; 
     if((mouseX >= buttonXCoords[0] && mouseX <= buttonXCoords[0] + buttonSize && mouseY >= buttonYCoords[0] && mouseY <= buttonYCoords[0] + buttonSize && mousePressed) || (keyPressed && key == 's'))
     {
-      greyOutButtons();
+      greyOutHitAndStandButtons();
       clicked = true;
     }
     
@@ -228,9 +232,11 @@ class BlackJack
     return clicked;
   }
   
-  public void greyOutButtons()
+  public void resetCardCoords()
   {
-    setHitButCol(128, 128, 128);
-    setStandButCol(128, 128, 128);
+    playerCardsXpos = playerStartingCardsXpos;
+    playerCardsYpos = playerStartingCardsYpos;
+    dealerCardsXpos = dealerStartingCardsXpos;
+    dealerCardsYpos = dealerStartingCardsYpos;
   }
 }
