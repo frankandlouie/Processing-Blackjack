@@ -2,6 +2,7 @@ void setup()
 {
   background(128, 192, 255);
   size(1280, 720);
+  frameRate(30);
 }
 
 BlackJack game = new BlackJack();
@@ -27,6 +28,8 @@ private boolean push = false;
 void draw()
 {
   textSize(25);
+  line(0, height/2, width, height/2);
+  line(width/2, 0, width/2, height);
   
   if(!firstCardBurned)
   {
