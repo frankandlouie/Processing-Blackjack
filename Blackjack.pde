@@ -13,16 +13,16 @@ class BlackJack
   private color endGameButtonColor = color(255, 0 ,0);
  
   // Parallel Arrays: [0]=Stand, [1]=Hit, [2]=NextHand, [3]=EndGame
-  private int [] buttonXCoords     = {850, 1000, 1000, 1150};
-  private int [] buttonYCoords     = {600, 600,  200,   200};
-  private int [] buttonTextXCoords = {buttonXCoords[0] + 10, buttonXCoords[1] + 25, buttonXCoords[2] + 15, buttonXCoords[3] + 25};
-  private int [] buttonTextYCoords = {buttonYCoords[0] + 60, buttonYCoords[1] + 60, buttonYCoords[2] + 40, buttonYCoords[3] + 40};
+  private int [] buttonXCoords     = {640 - 110, 640 + 10, 1000, 1150};
+  private int [] buttonYCoords     = {600      , 600     ,  600,  600};
+  private int [] buttonTextXCoords = {buttonXCoords[0] + 10, buttonXCoords[1] + 10, buttonXCoords[2] + 10, buttonXCoords[3] + 10};
+  private int [] buttonTextYCoords = {buttonYCoords[0] + 40, buttonYCoords[1] + 40, buttonYCoords[2] + 30, buttonYCoords[3] + 30};
   
   private int dealerCardIndex;
   
-  private int playerStartingCardsXpos = 530;
+  private int playerStartingCardsXpos = 535;
   private int playerStartingCardsYpos = 400;
-  private int dealerStartingCardsXpos = 530;
+  private int dealerStartingCardsXpos = 535;
   private int dealerStartingCardsYpos = 100;
   
   private int playerCardsXpos = playerStartingCardsXpos;
@@ -136,6 +136,8 @@ class BlackJack
     fill(0, 0, 0);
     textSize(30);
     text("Hit", buttonTextXCoords[1], buttonTextYCoords[1]);
+    text("[H]", buttonTextXCoords[1], buttonTextYCoords[1] + 30);
+
   }
   
   public void displayStandButton()
@@ -145,6 +147,7 @@ class BlackJack
     fill(0, 0, 0);
     textSize(30);
     text("Stand", buttonTextXCoords[0], buttonTextYCoords[0]);
+    text("[S]", buttonTextXCoords[0], buttonTextYCoords[0] + 30);
   }
   
   public void displayNextHandButton()
@@ -153,7 +156,9 @@ class BlackJack
     square(buttonXCoords[2], buttonYCoords[2], buttonSize);
     fill(0, 0, 0);
     textSize(30);
-    text("Next\nHand", buttonTextXCoords[2], buttonTextYCoords[2]);
+    text("Next", buttonTextXCoords[2], buttonTextYCoords[2]);
+    text("Hand", buttonTextXCoords[2], buttonTextYCoords[2] + 30);
+    text("[N]", buttonTextXCoords[2], buttonTextYCoords[2] + 60);
   }
   
   public void displayEndGameButton()
@@ -162,13 +167,14 @@ class BlackJack
     square(buttonXCoords[3], buttonYCoords[3], buttonSize);
     fill(0, 0, 0);
     textSize(30);
-    text("End\nGame", buttonTextXCoords[3], buttonTextYCoords[3]);
+    text("End", buttonTextXCoords[3], buttonTextYCoords[3]);
+    text("Game", buttonTextXCoords[3], buttonTextYCoords[3] + 30);
+    text("[Q]", buttonTextXCoords[3], buttonTextYCoords[3] + 60);
   }
   
-  public void setHitButCol(color col)
+  public void setHitButCol(int r, int g, int b)
   {
-    //hitButtonCol = color(r, g, b);
-    hitButtonColor = col;
+    hitButtonColor = color(r, g, b);
   }
   
   public void setStandButCol(int r, int g, int b)
@@ -178,15 +184,15 @@ class BlackJack
   
     public void greyOutHitAndStandButtons()
   {
-    setHitButCol(color(128, 128, 128));
+    setHitButCol(128, 128, 128);
     setStandButCol(128, 128, 128);
   }
   
   public void fillOutHitAndStandButtons()
   {
     //color hitButtonColor = color(216, 128, 164);
-    setHitButCol(hitButtonColor);
-    setStandButCol(128, 128, 128);
+    setHitButCol(255, 0, 0);
+    setStandButCol(255, 0, 0);
   }
   
   public boolean detectHitButtonClicked()
