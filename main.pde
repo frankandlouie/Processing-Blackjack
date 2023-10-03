@@ -44,9 +44,6 @@ void draw()
     game.dealCard('u', 'D');
     initialCardsDealt = true;
     playersTurn = true;
-    //text("Initial deal phase complete.", 10, 120);
-    //text(game.dealer.getTotal(), 400, 200);
-    //text(game.p1.getTotal(), 400, 500);
   }
   
   if(game.p1.blackjack())
@@ -65,15 +62,13 @@ void draw()
   
   if(playersTurn)
   {
-    //text("Now players turn.", 10, 180);
     if(game.detectHitButtonClicked())
     {
-      //text("You hit.", 10, 300);
       game.dealCard('u','p');
       game.p1.aceValueSetter();
       if(game.p1.busted())
       {
-        game.greyOutButtons();
+        game.greyOutHitAndStandButtons();
         playerBusts = true;
         playersTurn = false;
         dealersTurn = true;
@@ -81,7 +76,6 @@ void draw()
     }
     if(game.detectStandButtonClicked())
     {
-      //text("You stand.", 10, 360);
       playersTurn = false;
       dealersTurn = true;
     }
@@ -89,7 +83,6 @@ void draw()
   
   if(dealersTurn)
   {
-    //text("Dealers Turn.", 10, 480);
     game.revealDealerCard();
     game.dealersTurn();
     if(game.dealer.busted())
@@ -165,14 +158,6 @@ void draw()
     askNextRound = true;
   }
   
-  //private boolean firstCardBurned = false;
-  //private boolean initialCardsDealt = false;
-  //private boolean playersTurn = false;
-  //private boolean dealersTurn = false;
-  //private boolean calculateStandings = false;
-  //private boolean displayStandings = false;
-  //private boolean askNextRound = false;
-  
   if(askNextRound)
   {
     game.displayNextHandButton();
@@ -180,10 +165,28 @@ void draw()
     if(game.detectNextHandButtonClicked())
     {
       //Reset player and dealer card positions
+      game.resetCardCoords();
+      
       //Reset player and dealer hand total 
+      game.p1.resetHandTotal();
+      game.dealer.resetHandTotal();
+      
       //Set all initialCardsDealt phase to false
       initialCardsDealt = false;
+      
+      //Reset variables for who wins
+      playerBusts = false;
+      dealerBusts = false;
+      playerWins = false;
+      bothLose = false;
+      push = false;
+      
+      //fill Hit and Stand buttons
+      game.fillOutHitAndStandButtons();
+      
       askNextRound = false;
+      
+      //Reset background
       background(128, 192, 255);
     }
     if(game.detectEndGameButtonClicked())
