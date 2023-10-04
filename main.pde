@@ -2,12 +2,17 @@ void setup()
 {
   background(128, 192, 255);
   size(1280, 720);
+  //surface.setResizable(true);
   frameRate(30);
 }
 
 BlackJack game = new BlackJack();
 
 private boolean resumeGame = false;
+
+//Temp variables
+private int pWins = 0;
+private int dWins = 0;
 
 //Game phases
 private boolean firstCardBurned = false;
@@ -27,9 +32,13 @@ private boolean push = false;
 
 void draw()
 {
+  //line(0, height/2, width, height/2);
+  //line(width/2, 0, width/2, height);
+  
+  //Displays Player v. Dealer wins, just to show how BS this game is
   textSize(25);
-  line(0, height/2, width, height/2);
-  line(width/2, 0, width/2, height);
+  text("Player Wins: "+pWins, 300, 600);
+  text("Dealer Wins: "+dWins, 300, 625);
   
   if(!firstCardBurned)
   {
@@ -112,16 +121,19 @@ void draw()
     if(dealerBusts && !playerBusts)
     {
       playerWins = true;
+      pWins++;
     }
     //Scenario 2
     else if((!dealerBusts && !playerBusts) && game.p1.getTotal() > game.dealer.getTotal())
     {
       playerWins = true;
+      pWins++;
     }
     //Scenario 3
     else if((!dealerBusts && !playerBusts) && game.dealer.getTotal() > game.p1.getTotal())
     {
       playerWins = false;
+      dWins++;
     }
     //Scenario 4
     else if((!dealerBusts && !playerBusts) && game.dealer.getTotal() == game.p1.getTotal())
