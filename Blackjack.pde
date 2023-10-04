@@ -43,6 +43,7 @@ class BlackJack
     int burnCardXpos = (width/10);
     int burnCardYpos = ((height/2) - (150/2));
     image(loadImage(sixDecks.decks[0].getFrontSide()), burnCardXpos, burnCardYpos, 100, 150);
+    textSize(25);
     text("Burn Card", burnCardXpos, burnCardYpos - 10);    
     cardCount++;
   }
