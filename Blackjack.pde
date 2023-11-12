@@ -5,34 +5,60 @@ class BlackJack
   private int deckCount = 0;
   private int playerCardCount = 0;
   private int dealerCardCount = 0;
-  
+
   private int buttonSize = 100;
+  private float menuButtonWidth = 250;
+  private float menuButtonHeight = 100;
+  
   private color hitButtonColor = color (255, 0, 0);
-  private color standButtonColor = color(255, 0 ,0);
+  private color standButtonColor = color(255, 0, 0);
   private color nextHandButtonColor = color (255, 0, 0);
-  private color endGameButtonColor = color(255, 0 ,0);
- 
-  // Parallel Arrays: [0]=Stand, [1]=Hit, [2]=NextHand, [3]=EndGame
-  private int [] buttonXCoords     = {640 - 110, 640 + 10, 1000, 1150};
-  private int [] buttonYCoords     = {600      , 600     ,  600,  600};
-  private int [] buttonTextXCoords = {buttonXCoords[0] + 10, buttonXCoords[1] + 10, buttonXCoords[2] + 10, buttonXCoords[3] + 10};
-  private int [] buttonTextYCoords = {buttonYCoords[0] + 40, buttonYCoords[1] + 40, buttonYCoords[2] + 30, buttonYCoords[3] + 30};
-  
+  private color endGameButtonColor = color(255, 0, 0);
+
+  // Parallel Arrays: [0]=Stand, [1]=Hit, [2]=NextHand, [3]=EndGame, [4]=PLAY, [5]=QUIT
+  private float [] buttonXCoords     = {640 - 110, 640 + 10, 1000, 1150, width/2 - menuButtonWidth/4 - menuButtonWidth, width/2 + menuButtonWidth/4};
+  private float [] buttonYCoords     = {600, 600, 600, 600};
+  private float [] buttonTextXCoords = {buttonXCoords[0] + 10, buttonXCoords[1] + 10, buttonXCoords[2] + 10, buttonXCoords[3] + 10};
+  private float [] buttonTextYCoords = {buttonYCoords[0] + 40, buttonYCoords[1] + 40, buttonYCoords[2] + 30, buttonYCoords[3] + 30};
+
   private int dealerCardIndex;
-  
+
   private int playerStartingCardsXpos = 535;
   private int playerStartingCardsYpos = 400;
   private int dealerStartingCardsXpos = 535;
   private int dealerStartingCardsYpos = 100;
-  
+
   private int playerCardsXpos = playerStartingCardsXpos;
   private int playerCardsYpos = playerStartingCardsYpos;
   private int dealerCardsXpos = dealerStartingCardsXpos;
   private int dealerCardsYpos = dealerStartingCardsYpos;
   
+  //runGame variables
+  private boolean resumeGame = true;
+
+  //Temp variables
+  private int pWins = 0;
+  private int dWins = 0;
+
+  //Game phases
+  private boolean firstCardBurned = false;
+  private boolean initialCardsDealt = false;
+  private boolean playersTurn = false;
+  private boolean dealersTurn = false;
+  private boolean calculateStandings = false;
+  private boolean displayStandings = false;
+  private boolean askNextRound = false;
+
+  //Player variables
+  private boolean playerBusts = false;
+  private boolean dealerBusts = false;
+  private boolean playerWins = false;
+  private boolean bothLose = false;
+  private boolean push = false;
+
   Player p1 = new Player();
   Dealer dealer = new Dealer();
-  
+
   public BlackJack()
   {
     sixDecks.shuffleDeck();
@@ -44,21 +70,20 @@ class BlackJack
     int burnCardYpos = ((height/2) - (150/2));
     image(loadImage(sixDecks.decks[0].getFrontSide()), burnCardXpos, burnCardYpos, 100, 150);
     textSize(25);
-    text("Burn Card", burnCardXpos, burnCardYpos - 10);    
+    text("Burn Card", burnCardXpos, burnCardYpos - 10);
     cardCount++;
   }
 
   public void dealCard(char upOrDown, char playerOrDealer) // 'u' or 'd' and 'P' or 'D'
   {
-    if(playerOrDealer == 'D')
+    if (playerOrDealer == 'D')
     {
-      if(upOrDown == 'u')
+      if (upOrDown == 'u')
       {
         sixDecks.decks[cardCount].displayCard(dealerCardsXpos, dealerCardsYpos, sixDecks.decks[cardCount].getFrontSide());
         storeCard(playerOrDealer);
         //dealer.setCardValue(sixDecks.decks[cardCount].getRank(), dealerCardCount);
-      }
-      else
+      } else
       {
         sixDecks.decks[cardCount].displayCard(dealerCardsXpos, dealerCardsYpos, sixDecks.decks[cardCount].getBackSide());
         dealer.setHiddenCard(sixDecks.decks[cardCount].getFrontSide());
@@ -69,8 +94,7 @@ class BlackJack
       //cardXpos += 110;
       dealerCardCount++;
       cardCount++;
-    }
-    else
+    } else
     {
       sixDecks.decks[cardCount].displayCard(playerCardsXpos, playerCardsYpos, sixDecks.decks[cardCount].getFrontSide());
       storeCard(playerOrDealer);
@@ -81,31 +105,29 @@ class BlackJack
       cardCount++;
     }
   }
-  
+
   public void storeCard(char playerOrDealer)
   {
-    if(playerOrDealer == 'D')
+    if (playerOrDealer == 'D')
     {
       dealer.setCardValue(sixDecks.decks[cardCount].getRank(), dealerCardCount);
-    }
-    else
+    } else
     {
       p1.setCardValue(sixDecks.decks[cardCount].getRank(), playerCardCount);
     }
   }
-  
+
   public void updateCardPosition(char playerOrDealer)
   {
-    if(playerOrDealer == 'D')
+    if (playerOrDealer == 'D')
     {
       dealerCardsXpos += 110;
-    }
-    else
+    } else
     {
       playerCardsXpos += 110;
     }
   }
-  
+
   public void insurance()
   {
     int rectX = width/16;
@@ -115,21 +137,21 @@ class BlackJack
     textSize(50);
     text("Insurance?", rectX, rectY - 10);
   }
-  
+
   public void revealDealerCard()
   {
     image(loadImage(dealer.getHiddenCard()), 530, 100, 100, 150);
   }
-  
+
   public void dealersTurn()
   {
-    while(dealer.getTotal() < 17)
+    while (dealer.getTotal() < 17)
     {
       dealCard('u', 'D');
       dealer.aceValueSetter();
     }
   }
-  
+
   public void displayHitButton()
   {
     fill(hitButtonColor);
@@ -138,9 +160,8 @@ class BlackJack
     textSize(30);
     text("Hit", buttonTextXCoords[1], buttonTextYCoords[1]);
     text("[H]", buttonTextXCoords[1], buttonTextYCoords[1] + 30);
-
   }
-  
+
   public void displayStandButton()
   {
     fill(standButtonColor);
@@ -150,7 +171,7 @@ class BlackJack
     text("Stand", buttonTextXCoords[0], buttonTextYCoords[0]);
     text("[S]", buttonTextXCoords[0], buttonTextYCoords[0] + 30);
   }
-  
+
   public void displayNextHandButton()
   {
     fill(nextHandButtonColor);
@@ -161,7 +182,7 @@ class BlackJack
     text("Hand", buttonTextXCoords[2], buttonTextYCoords[2] + 30);
     text("[N]", buttonTextXCoords[2], buttonTextYCoords[2] + 60);
   }
-  
+
   public void displayEndGameButton()
   {
     fill(endGameButtonColor);
@@ -172,78 +193,283 @@ class BlackJack
     text("Game", buttonTextXCoords[3], buttonTextYCoords[3] + 30);
     text("[Q]", buttonTextXCoords[3], buttonTextYCoords[3] + 60);
   }
-  
+
   public void setHitButCol(int r, int g, int b)
   {
     hitButtonColor = color(r, g, b);
   }
-  
+
   public void setStandButCol(int r, int g, int b)
   {
     standButtonColor = color(r, g, b);
   }
-  
-    public void greyOutHitAndStandButtons()
+
+  public void greyOutHitAndStandButtons()
   {
     setHitButCol(128, 128, 128);
     setStandButCol(128, 128, 128);
   }
-  
+
   public void fillOutHitAndStandButtons()
   {
     //color hitButtonColor = color(216, 128, 164);
     setHitButCol(255, 0, 0);
     setStandButCol(255, 0, 0);
   }
-  
+
   public boolean detectHitButtonClicked()
   {
     boolean clicked = false;
-    if((mouseX >= buttonXCoords[1] && mouseX <= buttonXCoords[1] + buttonSize && mouseY >= buttonYCoords[1] && mouseY <= buttonYCoords[1] + buttonSize && mousePressed) || (keyPressed && key == 'h'))
+    if ((mouseX >= buttonXCoords[1] && mouseX <= buttonXCoords[1] + buttonSize && mouseY >= buttonYCoords[1] && mouseY <= buttonYCoords[1] + buttonSize && mousePressed) || (keyPressed && key == 'h'))
     {
       clicked = true;
-    }    
+    }
     return clicked;
   }
-  
+
   public boolean detectStandButtonClicked()
   {
-    boolean clicked = false; 
-    if((mouseX >= buttonXCoords[0] && mouseX <= buttonXCoords[0] + buttonSize && mouseY >= buttonYCoords[0] && mouseY <= buttonYCoords[0] + buttonSize && mousePressed) || (keyPressed && key == 's'))
+    boolean clicked = false;
+    if ((mouseX >= buttonXCoords[0] && mouseX <= buttonXCoords[0] + buttonSize && mouseY >= buttonYCoords[0] && mouseY <= buttonYCoords[0] + buttonSize && mousePressed) || (keyPressed && key == 's'))
     {
       greyOutHitAndStandButtons();
       clicked = true;
     }
-    
+
     return clicked;
   }
-  
+
   public boolean detectNextHandButtonClicked()
   {
-    boolean clicked = false; 
-    if((mouseX >= buttonXCoords[2] && mouseX <= buttonXCoords[2] + buttonSize && mouseY >= buttonYCoords[2] && mouseY <= buttonYCoords[2] + buttonSize && mousePressed) || (keyPressed && key == 'n'))
+    boolean clicked = false;
+    if ((mouseX >= buttonXCoords[2] && mouseX <= buttonXCoords[2] + buttonSize && mouseY >= buttonYCoords[2] && mouseY <= buttonYCoords[2] + buttonSize && mousePressed) || (keyPressed && key == 'n'))
     {
       clicked = true;
     }
-    
+
     return clicked;
   }
-  
+
   public boolean detectEndGameButtonClicked()
   {
-    boolean clicked = false; 
-    if((mouseX >= buttonXCoords[3] && mouseX <= buttonXCoords[3] + buttonSize && mouseY >= buttonYCoords[3] && mouseY <= buttonYCoords[3] + buttonSize && mousePressed) || (keyPressed && key == 'q'))
+    boolean clicked = false;
+    if ((mouseX >= buttonXCoords[3] && mouseX <= buttonXCoords[3] + buttonSize && mouseY >= buttonYCoords[3] && mouseY <= buttonYCoords[3] + buttonSize && mousePressed) || (keyPressed && key == 'q'))
     {
       clicked = true;
     }
     return clicked;
   }
-  
+
   public void resetCardCoords()
   {
     playerCardsXpos = playerStartingCardsXpos;
     playerCardsYpos = playerStartingCardsYpos;
     dealerCardsXpos = dealerStartingCardsXpos;
     dealerCardsYpos = dealerStartingCardsYpos;
+  }
+
+  void startMenu()
+  {
+    float imageWidth = 120;
+    float imageHeight = 180;
+
+    float buttonWidth = 250;
+    float buttonHeight = 100;
+    float buttonX1 = width/2 - buttonWidth/4 - buttonWidth;
+    float buttonX2 = width/2 + buttonWidth/4;
+    float buttonY = 7 * height/9;
+
+    background(78, 106, 84);
+    line(0, height/2, width, height/2);
+    line(width/2, 0, width/2, height);
+    textSize(100);
+    textAlign(CENTER, BOTTOM);
+    fill(255);
+    text("BLACKJACK", width/2, height/4);
+    image(loadImage("h14.png"), width/2 - imageWidth/4 - imageWidth, height/2 - imageHeight/2, imageWidth, imageHeight);
+    image(loadImage("c13.png"), width/2 + imageWidth/4, height/2 - imageHeight/2, imageWidth, imageHeight);
+
+    fill(255, 64, 32);
+    rect(buttonXCoords[4], buttonY, buttonWidth, buttonHeight);
+    rect(buttonXCoords[5], buttonY, buttonWidth, buttonHeight);
+    
+    fill(255);
+    textSize(75);
+    textAlign(BASELINE);
+    text("PLAY", buttonX1, buttonY);
+  }
+  
+  boolean playGame = false;
+
+  void runGame()
+  {
+    if(!playGame)
+    {
+      startMenu();
+    }
+    else
+    {
+      if (resumeGame)
+      {
+        while (!firstCardBurned)
+        {
+          burnFirstCard();
+          //text("First Card Burned", 10, 60);
+          firstCardBurned = true;
+          resumeGame = true;
+        }
+  
+        while (!initialCardsDealt)
+        {
+          dealCard('u', 'p');
+          dealCard('d', 'D');
+          dealCard('u', 'p');
+          dealCard('u', 'D');
+          initialCardsDealt = true;
+          playersTurn = true;
+        }
+  
+        while (game.p1.blackjack())
+        {
+          playersTurn = false;
+          calculateStandings = true;
+        }
+  
+        while (playersTurn)
+        {
+          if (detectHitButtonClicked())
+          {
+            dealCard('u', 'p');
+            p1.aceValueSetter();
+            if (game.p1.busted())
+            {
+              greyOutHitAndStandButtons();
+              playerBusts = true;
+              playersTurn = false;
+              dealersTurn = true;
+            }
+          }
+          if (detectStandButtonClicked())
+          {
+            playersTurn = false;
+            dealersTurn = true;
+          }
+        }
+  
+        while (dealersTurn)
+        {
+          revealDealerCard();
+          dealersTurn();
+          if (dealer.busted())
+          {
+            dealerBusts = true;
+          }
+          dealersTurn = false;
+          calculateStandings = true;
+          text("Dealer Total: "+game.dealer.getTotal(), 300, 175);
+          text("Plater Total: "+game.p1.getTotal(), 300, 475);
+        }
+  
+        while (calculateStandings)
+        {
+          /*
+          Scenario 1: Dealer busts and player has not: Player wins
+           Scenario 2: Nobody busts, player has greater sum than dealer: Player wins
+           Scenario 3: Nodody busts, dealer has greater sum than player: Player loses
+           Scenario 4: Nobody busts, dealer and player have equal sum: Push
+           Scenario 5: Both dealer and player busts: Both lose
+           */
+  
+          //Scenario 1
+          if (dealerBusts && !playerBusts)
+          {
+            playerWins = true;
+            pWins++;
+          }
+          //Scenario 2
+          else if ((!dealerBusts && !playerBusts) && p1.getTotal() > dealer.getTotal())
+          {
+            playerWins = true;
+            pWins++;
+          }
+          //Scenario 3
+          else if ((!dealerBusts && !playerBusts) && dealer.getTotal() > p1.getTotal())
+          {
+            playerWins = false;
+            dWins++;
+          }
+          //Scenario 4
+          else if ((!dealerBusts && !playerBusts) && dealer.getTotal() == p1.getTotal())
+          {
+            push = true;
+          }
+          //Scenario 5
+          else if (dealerBusts && playerBusts)
+          {
+            bothLose = true;
+          }
+  
+          calculateStandings = false;
+          displayStandings = true;
+        }
+  
+        while (displayStandings)
+        {
+          if (push)
+          {
+            text("Push!", 640, height / 2);
+          } else if (playerWins)
+          {
+            text("You win!", 640, height / 2);
+          } else if (bothLose)
+          {
+            text("You both lose!", 640, height / 2);
+          } else
+          {
+            text("You Lost! Dealer Wins!", 640, height / 2);
+          }
+  
+          displayStandings = false;
+          askNextRound = true;
+        }
+  
+        while (askNextRound)
+        {
+          displayNextHandButton();
+          displayEndGameButton();
+          if (detectNextHandButtonClicked())
+          {
+            //Reset player and dealer card positions
+            resetCardCoords();
+  
+            //Reset player and dealer hand total
+            p1.resetHandTotal();
+            dealer.resetHandTotal();
+  
+            //Set all initialCardsDealt phase to false
+            initialCardsDealt = false;
+  
+            //Reset variables for who wins
+            playerBusts = false;
+            dealerBusts = false;
+            playerWins = false;
+            bothLose = false;
+            push = false;
+  
+            //fill Hit and Stand buttons
+            fillOutHitAndStandButtons();
+  
+            askNextRound = false;
+  
+            //Reset background
+            background(128, 192, 255);
+          }
+          if (detectEndGameButtonClicked())
+          {
+            resumeGame = false;
+          }
+        }
+      }
+    }
   }
 }

@@ -1,6 +1,6 @@
 void setup() 
 {
-  background(128, 192, 255);
+  //background(128, 192, 255);
   size(1280, 720);
   //surface.setResizable(true);
   frameRate(30);
@@ -8,6 +8,14 @@ void setup()
 
 BlackJack game = new BlackJack();
 
+
+void draw()
+{
+  //game.startMenu();
+  game.runGame();
+}
+
+/*
 private boolean resumeGame = false;
 
 //Temp variables
@@ -107,15 +115,15 @@ void draw()
     text("Plater Total: "+game.p1.getTotal(), 300, 475);
   }
   
-  if(calculateStandings)
+  while(calculateStandings)
   {
-    /*
-    Scenario 1: Dealer busts and player has not: Player wins
-    Scenario 2: Nobody busts, player has greater sum than dealer: Player wins
-    Scenario 3: Nodody busts, dealer has greater sum than player: Player loses
-    Scenario 4: Nobody busts, dealer and player have equal sum: Push
-    Scenario 5: Both dealer and player busts: Both lose
-    */
+    
+    //Scenario 1: Dealer busts and player has not: Player wins
+    //Scenario 2: Nobody busts, player has greater sum than dealer: Player wins
+    //Scenario 3: Nodody busts, dealer has greater sum than player: Player loses
+    //Scenario 4: Nobody busts, dealer and player have equal sum: Push
+    //Scenario 5: Both dealer and player busts: Both lose
+    
     
     //Scenario 1
     if(dealerBusts && !playerBusts)
@@ -210,3 +218,4 @@ void draw()
     }
   }
 }
+*/
