@@ -1,6 +1,6 @@
 void setup() 
 {
-  //background(128, 192, 255);
+  background(128, 192, 255);
   size(1280, 720);
   //surface.setResizable(true);
   frameRate(30);
