@@ -303,15 +303,15 @@ class BlackJack
 
   void runGame()
   {
-    if(!playGame)
-    {
-      startMenu();
-    }
-    else
-    {
+    //if(!playGame)
+    //{
+    //  startMenu();
+    //}
+    //else
+    //{
       if (resumeGame)
       {
-        while (!firstCardBurned)
+        if (!firstCardBurned)
         {
           burnFirstCard();
           //text("First Card Burned", 10, 60);
@@ -319,7 +319,7 @@ class BlackJack
           resumeGame = true;
         }
   
-        while (!initialCardsDealt)
+        if (!initialCardsDealt)
         {
           dealCard('u', 'p');
           dealCard('d', 'D');
@@ -329,13 +329,13 @@ class BlackJack
           playersTurn = true;
         }
   
-        while (game.p1.blackjack())
+        if (game.p1.blackjack())
         {
           playersTurn = false;
           calculateStandings = true;
         }
   
-        while (playersTurn)
+        if (playersTurn)
         {
           if (detectHitButtonClicked())
           {
@@ -356,7 +356,7 @@ class BlackJack
           }
         }
   
-        while (dealersTurn)
+        if (dealersTurn)
         {
           revealDealerCard();
           dealersTurn();
@@ -370,7 +370,7 @@ class BlackJack
           text("Plater Total: "+game.p1.getTotal(), 300, 475);
         }
   
-        while (calculateStandings)
+        if (calculateStandings)
         {
           /*
           Scenario 1: Dealer busts and player has not: Player wins
@@ -413,7 +413,7 @@ class BlackJack
           displayStandings = true;
         }
   
-        while (displayStandings)
+        if (displayStandings)
         {
           if (push)
           {
@@ -433,7 +433,7 @@ class BlackJack
           askNextRound = true;
         }
   
-        while (askNextRound)
+        if (askNextRound)
         {
           displayNextHandButton();
           displayEndGameButton();
@@ -471,5 +471,5 @@ class BlackJack
         }
       }
     }
-  }
+  //}
 }
