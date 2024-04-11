@@ -9,7 +9,7 @@ class Player
     return playerHand.get(i);
   }
   
-  public void setCardValue(int cardRank, int i)
+  public void setCardValue(int cardRank)
   {
     //if(cardRank > 10 && cardRank < 14)
     //{
@@ -69,6 +69,17 @@ class Player
      }
    }
    
+  public boolean hasBlackjack()
+  {
+    boolean hasBlackjack = false;
+    
+    if(playerHand.size() == 2 && getTotal() == 21)
+    {
+      hasBlackjack = true;
+    }
+    return hasBlackjack;
+  }
+   
    public boolean busted()
    {
      boolean busted = false;
@@ -79,15 +90,15 @@ class Player
      return busted;
    }
    
-   public boolean blackjack()
-   {
-     boolean blackjack = false;
-     if(getTotal() == 21 && playerHand.size() == 2)
-     {
-       blackjack = true;
-     }
-     return blackjack;
-   }
+   //public boolean blackjack()
+   //{
+   //  boolean blackjack = false;
+   //  if(getTotal() == 21 && playerHand.size() == 2)
+   //  {
+   //    blackjack = true;
+   //  }
+   //  return blackjack;
+   //}
   
    public int getHandSize()
    {
@@ -103,10 +114,26 @@ class Player
 class Dealer extends Player
 {
   private String hiddenCardFrontSide;
+  private String upCard;
+  
+  public boolean upcardIsAce()
+  {
+    boolean upcardIsAce = false;
+    if(upCard.contains("14"))
+    {
+      upcardIsAce = true;
+    }
+    return upcardIsAce;
+  }
   
   public void setHiddenCard(String imageName)
   {
     hiddenCardFrontSide = imageName;
+  }
+  
+  public void setUpCard(String imageName)
+  {
+    upCard = imageName;
   }
   
   public String getHiddenCard()

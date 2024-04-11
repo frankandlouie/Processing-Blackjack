@@ -9,18 +9,18 @@ class BlackJack
   private int buttonSize = 100;
   private float menuButtonWidth = 250;
   private float menuButtonHeight = 100;
-  
+
   private color hitButtonColor = color (255, 0, 0);
   private color standButtonColor = color(255, 0, 0);
   private color nextHandButtonColor = color (255, 0, 0);
   private color endGameButtonColor = color(255, 0, 0);
 
-  // Parallel Arrays: [0]=Stand, [1]=Hit, [2]=NextHand, [3]=EndGame, [4]=PLAY, [5]=QUIT
+  // Parallel Arrays: [0]=Stand, [1]=Hit, [2]=EndGame, [3]=NextHand, [4]=PLAY, [5]=QUIT
   private float [] buttonXCoords     = {640 - 110, 640 + 10, 1000, 1150, width/2 - menuButtonWidth/4 - menuButtonWidth, width/2 + menuButtonWidth/4};
   private float [] buttonYCoords     = {600, 600, 600, 600};
   private float [] buttonTextXCoords = {buttonXCoords[0] + 10, buttonXCoords[1] + 10, buttonXCoords[2] + 10, buttonXCoords[3] + 10};
   private float [] buttonTextYCoords = {buttonYCoords[0] + 40, buttonYCoords[1] + 40, buttonYCoords[2] + 30, buttonYCoords[3] + 30};
-  
+
   private int dealerCardIndex;
 
   private int playerStartingCardsXpos = 535;
@@ -32,7 +32,7 @@ class BlackJack
   private int playerCardsYpos = playerStartingCardsYpos;
   private int dealerCardsXpos = dealerStartingCardsXpos;
   private int dealerCardsYpos = dealerStartingCardsYpos;
-  
+
 
 
   Player p1 = new Player();
@@ -42,6 +42,12 @@ class BlackJack
   public BlackJack()
   {
     sixDecks.shuffleDeck();
+    sixDecks.insertPlasticCard();
+  }
+
+  public void displayAllCards()
+  {
+    sixDecks.displayDeck();
   }
 
   public void burnFirstCard()
@@ -53,6 +59,18 @@ class BlackJack
     text("Burn Card", burnCardXpos, burnCardYpos - 10);
     cardCount++;
   }
+  
+  public boolean isPlasticCard(Card c)
+  {
+    boolean isPlasticCard = false;
+    
+    if(c.getFrontSide().equals("bc"))
+    {
+      isPlasticCard = true;
+    }
+    
+    return isPlasticCard;
+  }
 
   public void dealCard(char upOrDown, char playerOrDealer) // 'u' or 'd' and 'P' or 'D'
   {
@@ -62,6 +80,7 @@ class BlackJack
       {
         sixDecks.decks[cardCount].displayCard(dealerCardsXpos, dealerCardsYpos, sixDecks.decks[cardCount].getFrontSide());
         storeCard(playerOrDealer);
+        dealer.setUpCard(sixDecks.decks[cardCount].getFrontSide());
         //dealer.setCardValue(sixDecks.decks[cardCount].getRank(), dealerCardCount);
       } else
       {
@@ -90,10 +109,10 @@ class BlackJack
   {
     if (playerOrDealer == 'D')
     {
-      dealer.setCardValue(sixDecks.decks[cardCount].getRank(), dealerCardCount);
+      dealer.setCardValue(sixDecks.decks[cardCount].getRank());//, dealerCardCount);
     } else
     {
-      p1.setCardValue(sixDecks.decks[cardCount].getRank(), playerCardCount);
+      p1.setCardValue(sixDecks.decks[cardCount].getRank());//, playerCardCount);
     }
   }
 
@@ -108,14 +127,40 @@ class BlackJack
     }
   }
 
-  public void insurance()
+  public void insurance(boolean insuranceTaken)
   {
+    boolean decisionNotMade = true;
+    
+    Button sure = new Button(100, 100, 100, 600, "Sure!\n[y]", 96, 255, 96, 'y');
+    Button noThanks = new Button(100, 100, 250, 600, "No\nthanks.\n[n]", 255, 0, 0, 'n');
+    
     int rectX = width/16;
     int rectY = height/10;
     int rectWidth = width/5;
     int rectHeight = height/8;
     textSize(50);
     text("Insurance?", rectX, rectY - 10);
+    
+    sure.drawButton();
+    noThanks.drawButton();
+    
+    while(decisionNotMade)
+    {
+    //  System.out.println("decision = " + decisionNotMade);
+      if(sure.detectButtonPressed())
+      {
+        System.out.println("insurance was taken");
+        insuranceTaken = true;
+        decisionNotMade = false;
+      }
+      
+      if(noThanks.detectButtonPressed())
+      {
+        System.out.println("insurance was not taken");
+        insuranceTaken = false;
+        decisionNotMade = false;
+      }
+    }
   }
 
   public void revealDealerCard()
@@ -132,52 +177,55 @@ class BlackJack
     }
   }
 
-  public void displayHitButton()
-  {
-    fill(hitButtonColor);
-    square(buttonXCoords[1], buttonYCoords[1], buttonSize);
-    fill(0, 0, 0);
-    textSize(30);
-    text("Hit", buttonTextXCoords[1], buttonTextYCoords[1]);
-    text("[H]", buttonTextXCoords[1], buttonTextYCoords[1] + 30);
-  }
+  //public void displayHitButton()
+  //{
+  //  fill(hitButtonColor);
+  //  square(buttonXCoords[1], buttonYCoords[1], buttonSize);
+  //  fill(0, 0, 0);
+  //  textSize(30);
+  //  text("Hit", buttonTextXCoords[1], buttonTextYCoords[1]);
+  //  text("[H]", buttonTextXCoords[1], buttonTextYCoords[1] + 30);
+  //}
 
-  public void displayStandButton()
-  {
-    fill(standButtonColor);
-    square(buttonXCoords[0], buttonYCoords[0], buttonSize);
-    fill(0, 0, 0);
-    textSize(30);
-    text("Stand", buttonTextXCoords[0], buttonTextYCoords[0]);
-    text("[S]", buttonTextXCoords[0], buttonTextYCoords[0] + 30);
-  }
+  //public void displayStandButton()
+  //{
+  //  fill(standButtonColor);
+  //  square(buttonXCoords[0], buttonYCoords[0], buttonSize);
+  //  fill(0, 0, 0);
+  //  textSize(30);
+  //  text("Stand", buttonTextXCoords[0], buttonTextYCoords[0]);
+  //  text("[S]", buttonTextXCoords[0], buttonTextYCoords[0] + 30);
+  //}
 
   public void displayNextHandButton()
   {
     fill(nextHandButtonColor);
-    square(buttonXCoords[2], buttonYCoords[2], buttonSize);
+    square(buttonXCoords[3], buttonYCoords[3], buttonSize);
     fill(0, 0, 0);
     textSize(30);
-    text("Next", buttonTextXCoords[2], buttonTextYCoords[2]);
-    text("Hand", buttonTextXCoords[2], buttonTextYCoords[2] + 30);
-    text("[N]", buttonTextXCoords[2], buttonTextYCoords[2] + 60);
+    text("Next", buttonTextXCoords[3], buttonTextYCoords[3]);
+    text("Hand", buttonTextXCoords[3], buttonTextYCoords[3] + 30);
+    //text("[→]", buttonTextXCoords[3], buttonTextYCoords[3] + 60);
+    text("[N]", buttonTextXCoords[3], buttonTextYCoords[3] + 60);
   }
 
   public void displayEndGameButton()
   {
     fill(endGameButtonColor);
-    square(buttonXCoords[3], buttonYCoords[3], buttonSize);
+    square(buttonXCoords[2], buttonYCoords[2], buttonSize);
     fill(0, 0, 0);
     textSize(30);
-    text("End", buttonTextXCoords[3], buttonTextYCoords[3]);
-    text("Game", buttonTextXCoords[3], buttonTextYCoords[3] + 30);
-    text("[Q]", buttonTextXCoords[3], buttonTextYCoords[3] + 60);
+    text("End", buttonTextXCoords[2], buttonTextYCoords[2]);
+    text("Game", buttonTextXCoords[2], buttonTextYCoords[2] + 30);
+    text("[Q]", buttonTextXCoords[2], buttonTextYCoords[2] + 60);
   }
 
   public boolean detectNextHandButtonClicked()
   {
     boolean clicked = false;
-    if ((mouseX >= buttonXCoords[2] && mouseX <= buttonXCoords[2] + buttonSize && mouseY >= buttonYCoords[2] && mouseY <= buttonYCoords[2] + buttonSize && mousePressed) || (keyPressed && key == 'n'))
+    if ((mouseX >= buttonXCoords[2] && mouseX <= buttonXCoords[2] + buttonSize && mouseY >= buttonYCoords[2] && mouseY <= buttonYCoords[2] + buttonSize && mousePressed) || 
+    //(keyPressed && (key == CODED && keyCode == RIGHT)))
+    (keyPressed && key == 'n'))
     {
       clicked = true;
     }
@@ -227,13 +275,13 @@ class BlackJack
     fill(255, 64, 32);
     rect(buttonXCoords[4], buttonY, buttonWidth, buttonHeight);
     rect(buttonXCoords[5], buttonY, buttonWidth, buttonHeight);
-    
+
     fill(255);
     textSize(75);
     textAlign(BASELINE);
     text("PLAY", buttonX1, buttonY);
   }
-  
+
   //runGame variables
   private boolean resumeGame = true;
 
@@ -249,6 +297,7 @@ class BlackJack
   private boolean calculateStandings = false;
   private boolean displayStandings = false;
   private boolean askNextRound = false;
+  private boolean plasticCardReached = false;
 
   //Player variables
   private boolean playerBusts = false;
@@ -256,10 +305,11 @@ class BlackJack
   private boolean playerWins = false;
   private boolean bothLose = false;
   private boolean push = false;
+  private boolean insuranceTaken = false;
   boolean playGame = false;
 
-  Button hit = new Button(100, 100, 640 + 10, 600, "Hit\n[H]", 255, 0, 0);
-  Button stand = new Button(100, 100, 640 - 110, 600, "Stand\n[S]", 255, 0, 0);
+  Button hit = new Button(100, 100, 640 + 10, 600, "Hit\n[H]", 255, 0, 0, 'h');
+  Button stand = new Button(100, 100, 640 - 110, 600, "Stand\n[S]", 255, 0, 0, 's');
 
   public void runGame()
   {
@@ -280,21 +330,95 @@ class BlackJack
         dealCard('u', 'p');
         dealCard('u', 'D');
         initialCardsDealt = true;
-        playersTurn = true;
+        //if(dealer.hasBlackjack())
+        //{
+        //playersTurn = false;
+        //calculateStandings = true;
+        //}
+        //else
+        //{
+        if(p1.hasBlackjack())
+        {
+          System.out.println("Player has blackjack");
+          playersTurn = false;
+          dealersTurn = false;
+          playerWins = true;
+          calculateStandings = true;
+        }
+        else if(dealer.hasBlackjack() && p1.hasBlackjack())
+        {
+          System.out.println("Dealer and player have blackjack");
+          playersTurn = false;
+          dealersTurn = false;
+          push = true;
+          calculateStandings = true;
+        }
+        //else if(dealer.upcardIsAce())
+        //{          
+        //  insurance(insuranceTaken);
+        //  if(insuranceTaken)
+        //  {
+        //    if(dealer.hasBlackjack())
+        //    {
+        //      System.out.println("Dealer has blackjack");
+        //      push = true;
+        //      calculateStandings = true;
+        //    }
+        //    else
+        //    {
+        //      playersTurn = true;
+        //    }
+        //  }
+        //  else
+        //  {
+        //    if(dealer.hasBlackjack())
+        //    {
+        //      System.out.println("Dealer has blackjack");
+        //      push = true;
+        //      calculateStandings = true;
+        //    }
+        //    else
+        //    {
+        //      playersTurn = true;
+        //    }
+        //  }
+        //}
+        else
+        {
+          System.out.println("Nobody does not blackjack");
+          playersTurn = true;
+        }
+        
+        //if(p1.hasBlackjack())
+        //{
+        //  System.out.println("Dealer has blackjack");
+        //  playersTurn = false;
+        //}
+        //else
+        //{
+        //  System.out.println("Player does not blackjack");         
+        //  playersTurn = true;
+        //}
+        //}
       }
 
-      if (game.p1.blackjack())
-      {
-        playersTurn = false;
-        calculateStandings = true;
-      }
+      //if (game.p1.blackjack())
+      //{
+      //  playersTurn = false;
+      //  calculateStandings = true;
+      //}
+      //if(dealer.hasBlackjack())
+      //{
+      //  playersTurn = false;
+      //  dealersTurn = true;
+      //}
 
       if (playersTurn)
       {
         hit.drawButton();
         stand.drawButton();
         //if (detectHitButtonClicked())
-        if(hit.detectClicked())
+        if (hit.detectClicked() || hit.detectButtonPressed())
         {
           dealCard('u', 'p');
           p1.aceValueSetter();
@@ -311,7 +435,7 @@ class BlackJack
           }
         }
         //if (detectStandButtonClicked())
-        if(stand.detectClicked())
+        if (stand.detectClicked() || stand.detectButtonPressed())
         {
           playersTurn = false;
           dealersTurn = true;
@@ -380,13 +504,16 @@ class BlackJack
         if (push)
         {
           text("Push!", 640, height / 2);
-        } else if (playerWins)
+        } 
+        else if (playerWins)
         {
           text("You win!", 640, height / 2);
-        } else if (bothLose)
+        } 
+        else if (bothLose)
         {
           text("You both lose!", 640, height / 2);
-        } else
+        } 
+        else
         {
           text("You Lost! Dealer Wins!", 640, height / 2);
         }
@@ -432,9 +559,9 @@ class BlackJack
         if (detectEndGameButtonClicked())
         {
           resumeGame = false;
+          exit();
         }
       }
     }
   }
-  
 }

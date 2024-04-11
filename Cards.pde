@@ -4,19 +4,26 @@ class Card
   private int rank;
   private int cardImageStatus;
   private String frontSide;
-  private String backSide = "backSide.png";
+  private String backSide;
   //private String currentCardImage;
   private float xPos;
   private float yPos;
   //private float cardX = width;
-  //private float cardY = height; //<>// //<>// //<>// //<>//
+  //private float cardY = height; //<>// //<>// //<>// //<>// //<>//
   
   public Card(char s, int r, String cI)
   {
     suit = s;
     rank = r;
     frontSide = cI;
+    backSide = "backSide.png";
     //currentCardImage = cI;
+  }
+  
+  public Card(String cI)
+  {
+    frontSide = cI;
+    backSide = cI;
   }
   
   public int getRank()

@@ -7,6 +7,7 @@ class Button
   private float xPos = 0;
   private float yPos = 0;
   private String text = " ";
+  private char correspondingChar;
   private int textSize = 30;
   private int colorR = 0;
   private int colorG = 0;
@@ -15,7 +16,7 @@ class Button
   private color gray = color(128);
   private color currentColor; 
   
-  public Button(float length, float width, float xPos, float yPos, String text, int R, int G, int B)
+  public Button(float length, float width, float xPos, float yPos, String text, int R, int G, int B, char c)
   {
     longSide = length;
     shortSide = width;
@@ -25,6 +26,8 @@ class Button
     colorR = R;
     colorG = G;
     colorB = B;
+    correspondingChar = c;
+    
     butColor = color(R, G, B);
     currentColor = butColor;
   }
@@ -51,5 +54,10 @@ class Button
   public boolean detectClicked()
   {
     return ((mouseX >= xPos && mouseX <= xPos + longSide && mouseY >= yPos && mouseY <= yPos + shortSide) && mousePressed) ? true : false;
+  }
+  
+  public boolean detectButtonPressed()
+  {
+    return keyPressed && key == correspondingChar ? true : false;
   }
 }
