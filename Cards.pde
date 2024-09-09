@@ -41,6 +41,11 @@ class Card
     return frontSide; 
   }
   
+  public boolean isBC()
+  {
+    return frontSide.equals("bc.png");
+  }
+  
   //public String getCurrentCardImage()
   //{
   //  return currentCardImage;

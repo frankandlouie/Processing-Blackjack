@@ -74,6 +74,11 @@ class BlackJack
 
   public void dealCard(char upOrDown, char playerOrDealer) // 'u' or 'd' and 'P' or 'D'
   {
+    if(sixDecks.decks[cardCount].isBC())
+    {
+      cardCount++;
+      plasticCardReached = true;
+    }
     if (playerOrDealer == 'D')
     {
       if (upOrDown == 'u')
@@ -242,6 +247,26 @@ class BlackJack
     }
     return clicked;
   }
+  
+  public void resetGameVars()
+  {
+    //Reset player and dealer hand total
+    p1.resetHandTotal();
+    dealer.resetHandTotal();
+
+    //Set all initialCardsDealt phase to false
+    initialCardsDealt = false;
+
+    //Reset variables for who wins
+    playerBusts = false;
+    dealerBusts = false;
+    playerWins = false;
+    bothLose = false;
+    push = false;
+    
+    //Reset variable controlling next round inquiries
+    askNextRound = false;
+  }
 
   public void resetCardCoords()
   {
@@ -249,6 +274,19 @@ class BlackJack
     playerCardsYpos = playerStartingCardsYpos;
     dealerCardsXpos = dealerStartingCardsXpos;
     dealerCardsYpos = dealerStartingCardsYpos;
+  }
+  
+  public void resetGame()
+  {
+    plasticCardReached = false;
+    resetGameVars();
+    cardCount = 0;
+    sixDecks.shuffleDeck();
+    sixDecks.insertPlasticCard();
+    background(128, 192, 255);
+    resetCardCoords();
+    firstCardBurned = false;
+    initialCardsDealt = false;
   }
 
   public void startMenu()
@@ -310,6 +348,9 @@ class BlackJack
 
   Button hit = new Button(100, 100, 640 + 10, 600, "Hit\n[H]", 255, 0, 0, 'h');
   Button stand = new Button(100, 100, 640 - 110, 600, "Stand\n[S]", 255, 0, 0, 's');
+  
+  Button newGame = new Button(100, 100, 640 + 10, 600, "Yes\n[Y]", 255, 0, 0, 'y');
+  Button quit = new Button(100, 100, 640 - 110, 600, "No\n[Q]", 255, 0, 0, 'q');
 
   public void runGame()
   {
@@ -455,6 +496,12 @@ class BlackJack
         text("Dealer Total: "+game.dealer.getTotal(), 300, 175);
         text("Plater Total: "+game.p1.getTotal(), 300, 475);
       }
+      
+      //if(sixDecks.decks[cardCount].isBC())
+      //{
+      //  plasticCardReached = true;
+      //  System.out.println("Restart the game.");
+      //}
 
       if (calculateStandings)
       {
@@ -503,19 +550,19 @@ class BlackJack
       {
         if (push)
         {
-          text("Push!", 640, height / 2);
+          text("Push!", 600, height / 2);
         } 
         else if (playerWins)
         {
-          text("You win!", 640, height / 2);
+          text("You win!", 600, height / 2);
         } 
         else if (bothLose)
         {
-          text("You both lose!", 640, height / 2);
+          text("You both lose!", 600, height / 2);
         } 
         else
         {
-          text("You Lost! Dealer Wins!", 640, height / 2);
+          text("You Lost! Dealer Wins!", 600, height / 2);
         }
 
         displayStandings = false;
@@ -524,42 +571,65 @@ class BlackJack
 
       if (askNextRound)
       {
-        displayNextHandButton();
-        displayEndGameButton();
-        if (detectNextHandButtonClicked())
+        if(plasticCardReached)
         {
-          //Reset player and dealer card positions
-          resetCardCoords();
-
-          //Reset player and dealer hand total
-          p1.resetHandTotal();
-          dealer.resetHandTotal();
-
-          //Set all initialCardsDealt phase to false
-          initialCardsDealt = false;
-
-          //Reset variables for who wins
-          playerBusts = false;
-          dealerBusts = false;
-          playerWins = false;
-          bothLose = false;
-          push = false;
-
-          //fill Hit and Stand buttons
-          //fillOutHitAndStandButtons();
-          stand.fillOutButton();
-          hit.fillOutButton();
-          stand.drawButton();
-          hit.drawButton();
-          askNextRound = false;
-
-          //Reset background
-          background(128, 192, 255);
+          textSize(50);
+          text("The Plastic Card\nhas been reached.\nWould you like to\nplay another game?", 800, 3 * height / 5);
+          
+          newGame.drawButton();
+          quit.drawButton();
+          
+          if (newGame.detectClicked() || newGame.detectButtonPressed())
+          {
+            resetGame();
+          }
+          if (quit.detectClicked() || quit.detectButtonPressed())
+          {
+            exit();
+          }
         }
-        if (detectEndGameButtonClicked())
+        else
         {
-          resumeGame = false;
-          exit();
+          displayNextHandButton();
+          displayEndGameButton();
+          if (detectNextHandButtonClicked())
+          {
+            //Reset player and dealer card positions
+            resetCardCoords();
+  
+            ////Reset player and dealer hand total
+            //p1.resetHandTotal();
+            //dealer.resetHandTotal();
+  
+            ////Set all initialCardsDealt phase to false
+            //initialCardsDealt = false;
+  
+            ////Reset variables for who wins
+            //playerBusts = false;
+            //dealerBusts = false;
+            //playerWins = false;
+            //bothLose = false;
+            //push = false;
+            
+            //Reset Game Variables
+            resetGameVars();
+  
+            //fill Hit and Stand buttons
+            //fillOutHitAndStandButtons();
+            stand.fillOutButton();
+            hit.fillOutButton();
+            stand.drawButton();
+            hit.drawButton();
+            askNextRound = false;
+  
+            //flush the background
+            background(128, 192, 255);
+          }
+          if (detectEndGameButtonClicked())
+          {
+            resumeGame = false;
+            exit();
+          }
         }
       }
     }
